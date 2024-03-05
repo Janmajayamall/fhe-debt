@@ -16,7 +16,10 @@ def pretty_print_dict(v, is_recv, group_size: int):
     else:
         print("Payers:")
     for i in range(group_size):
-        print(f"    R{i}: ${v[i]}")
+        if is_recv:
+            print(f"    R{i}: ${v[i]}")
+        else:
+            print(f"    P{i}: ${v[i]}")
 
 # we assume 2 separate groups. receivers are net owed and payers owe. 
 receivers = {}
@@ -77,6 +80,7 @@ while True:
     # Let's say max_pay_id owes 100 and max_recv_id is owed 200, then (2) will output 100. 
     # Hence max_recv_id learns that max_pay_id overall owes 100 AND max_pay_id learns that max_recv_id is owed >= 100. 
     # In this case, max_recv_id has advantage (since it learns max_pay_id's amount) but the same applies if max_recv_id was owed less than max_pay_id owes. 
+    # (2) is the best we can do since output of min is one of the inputs.
     to_pay = min(receivers[max_recv_id], payers[max_pay_id])    
     # max_recv_id is now owed to_pay less
     receivers[max_recv_id] -= to_pay
